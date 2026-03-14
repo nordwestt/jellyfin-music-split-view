@@ -6,17 +6,34 @@ import { useItem } from 'hooks/useItem';
 import { ParentId } from 'types/library';
 import ItemsView from './ItemsView';
 import { LibraryTab } from 'types/libraryTab';
-import { CollectionType, ImageType } from '@jellyfin/sdk/lib/generated-client';
+import { BaseItemDto, CollectionType, ImageType } from '@jellyfin/sdk/lib/generated-client';
 import { getImageUrl } from 'apps/stable/features/playback/utils/image';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary/AccordionSummary';
 import { T } from 'vitest/dist/chunks/reporters.d.BFLkQcL6';
+import ServerConnections from 'lib/jellyfin-apiclient/ServerConnections';
+import ItemCard from './ItemCard';
 
 interface ArtistDetailViewProps {
     parentId: ParentId;
 }
+
+export function getSimilarItems(item: ItemDto) {
+    if (!item.ServerId || !item.Id) return null;
+
+    const apiClient = ServerConnections.getApiClient(item.ServerId);
+
+    const options = {
+            userId: apiClient.getCurrentUserId(),
+            limit: 12,
+            fields: 'PrimaryImageAspectRatio,CanDelete'
+        };
+
+    return apiClient.getSimilarItems(item.Id, options);
+}
+
 
 const ArtistDetailView: FC<ArtistDetailViewProps> = ({
     parentId,
@@ -25,8 +42,9 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
     const [artistData, setArtistData] = React.useState<ItemDto | undefined>(undefined);
     const [backdropUrl, setBackdropUrl] = React.useState<string | null>(null);
     const [overviewExpanded, setOverviewExpanded] = React.useState<boolean>(false);
-
+    const [similarItems, setSimilarItems] = React.useState<BaseItemDto[]>([]);
     const itemResult = useItem(parentId?.toString());
+
     React.useEffect(() => {
         if (itemResult.data) {
             console.log('Artist data fetched:', itemResult.data);
@@ -35,11 +53,26 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
             setBackdropUrl(bgUrl);
             console.log('Background image URL:', bgUrl);
             artistData?.Overview
+
+            loadSimilarItems();
+            
         }
     }, [itemResult.data]);
 
     const getBackgroundImageUrl = () => {
         return getImageUrl(itemResult.data!, { type: ImageType.Primary });
+    }
+
+    const loadSimilarItems = async () => {
+        if (!itemResult.data) return;
+
+        try {
+            const items = await getSimilarItems(itemResult.data);
+            setSimilarItems(items?.Items || []);
+            console.log('Similar items fetched:', items);
+        } catch (error) {
+            console.error('Error fetching similar items:', error);
+        }
     }
 
     return (
@@ -94,6 +127,16 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
                         'No songs available'
                     }
                 />
+
+            <Box>
+                <Typography variant="h2" component="h2" gutterBottom>
+                    Similar Artists
+                </Typography>
+                    {similarItems.map(item => (
+                        <ItemCard key={item.Id} item={item} />
+                    ))}
+            </Box>
+                
 
             
         </Box>
