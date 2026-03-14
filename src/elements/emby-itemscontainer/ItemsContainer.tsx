@@ -22,6 +22,7 @@ import loading from 'components/loading/loading';
 import focusManager from 'components/focusManager';
 import type { ParentId } from 'types/library';
 import type { PlaybackStopInfo } from 'types/playbackStopInfo';
+import { ItemAction } from 'constants/itemAction';
 
 function disableEvent(e: MouseEvent) {
     e.preventDefault();
@@ -44,7 +45,8 @@ export interface ItemsContainerProps {
     parentId?: ParentId;
     reloadItems?: () => void;
     getItemsHtml?: () => string;
-    queryKey?: string[]
+    queryKey?: string[];
+    onSelectItem?: (itemId: string) => void;
 }
 
 const ItemsContainer: FC<PropsWithChildren<ItemsContainerProps>> = ({
@@ -57,7 +59,8 @@ const ItemsContainer: FC<PropsWithChildren<ItemsContainerProps>> = ({
     queryKey,
     reloadItems,
     getItemsHtml,
-    children
+    children,
+    onSelectItem
 }) => {
     const queryClient = useQueryClient();
     const { mutateAsync: playlistsMoveItemMutation } = usePlaylistsMoveItemMutation();
@@ -69,6 +72,17 @@ const ItemsContainer: FC<PropsWithChildren<ItemsContainerProps>> = ({
     const onClick = useCallback((e: MouseEvent) => {
         const itemsContainer = itemsContainerRef.current as HTMLDivElement;
         const multiSelect = multiSelectref.current;
+        const target = e.target as HTMLElement;
+        const card = dom.parentWithAttribute(target, 'data-id');
+        const actionElement = dom.parentWithAttribute(target, 'data-action');
+        const action = actionElement?.getAttribute('data-action');
+
+        if (action === ItemAction.Select && card?.getAttribute('data-id')) {
+            onSelectItem?.(card.getAttribute('data-id') ?? '');
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+        }
 
         if (
             multiSelect

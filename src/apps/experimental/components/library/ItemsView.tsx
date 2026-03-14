@@ -55,6 +55,7 @@ interface ItemsViewProps {
     isBtnGridListEnabled?: boolean;
     isAlphabetPickerEnabled?: boolean;
     noItemsMessage: string;
+    onSelectItem?: (itemId: string) => void;
 }
 
 const ItemsView: FC<ItemsViewProps> = ({
@@ -72,7 +73,8 @@ const ItemsView: FC<ItemsViewProps> = ({
     isBtnGridListEnabled = true,
     isAlphabetPickerEnabled = true,
     itemType,
-    noItemsMessage
+    noItemsMessage, 
+    onSelectItem
 }) => {
     const [libraryViewSettings, setLibraryViewSettings] =
         useLocalStorage<LibraryViewSettings>(
@@ -112,6 +114,8 @@ const ItemsView: FC<ItemsViewProps> = ({
             listOptions.addToListButton = true;
         } else if (viewType === LibraryTab.Episodes) {
             listOptions.showParentTitle = true;
+        } else if (viewType === LibraryTab.Artists) {
+            listOptions.action = ItemAction.Select;
         }
 
         return listOptions;
@@ -389,6 +393,7 @@ const ItemsView: FC<ItemsViewProps> = ({
                     parentId={parentId}
                     reloadItems={refetch}
                     queryKey={['ItemsViewByType']}
+                    onSelectItem={onSelectItem}
                 >
                     {getItems()}
                 </ItemsContainer>

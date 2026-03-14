@@ -17,6 +17,15 @@ interface PageTabContentProps {
 }
 
 const PageTabContent: FC<PageTabContentProps> = ({ parentId, currentTab }) => {
+
+    const [selectedItemId, setSelectedItemId] = React.useState<string | null>(null);
+
+
+    const setSelectedItem = (itemId: string) => {
+        console.log('Selected item ID:', itemId);
+        setSelectedItemId(itemId);
+    }
+
     if (currentTab.viewType === LibraryTab.Suggestions) {
         return (
             <>
@@ -122,6 +131,7 @@ const PageTabContent: FC<PageTabContentProps> = ({ parentId, currentTab }) => {
                     noItemsMessage={
                         currentTab.noItemsMessage || 'MessageNoItemsAvailable'
                     }
+                    onSelectItem={setSelectedItem}
                 />
             </Box>
             <Box>
