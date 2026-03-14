@@ -36,6 +36,29 @@ export function getSimilarItems(item: ItemDto) {
     return apiClient.getSimilarItems(item.Id, options);
 }
 
+export function getArtistAlbums(item: ItemDto) {
+    if (!item.ServerId || !item.Id) return null;
+
+    const apiClient = ServerConnections.getApiClient(item.ServerId);
+
+    let query = {
+        SortBy: 'Album,SortName',
+        SortOrder: 'Ascending',
+        IncludeItemTypes: 'MusicAlbum',
+        Recursive: true,
+        Fields: 'ParentId',
+        StartIndex: 0,
+        ImageTypeLimit: 1,
+        EnableImageTypes: 'Primary',
+        ParentId: item.Id
+    }
+
+    console.log('Artist albums query:', query);
+
+    return apiClient.getItems(apiClient.getCurrentUserId(), query);
+}
+
+
 
 const ArtistDetailView: FC<ArtistDetailViewProps> = ({
     parentId,
@@ -46,6 +69,7 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
     const [backdropUrl, setBackdropUrl] = React.useState<string | null>(null);
     const [overviewExpanded, setOverviewExpanded] = React.useState<boolean>(false);
     const [similarItems, setSimilarItems] = React.useState<BaseItemDto[]>([]);
+    const [albums, setAlbums] = React.useState<BaseItemDto[]>([]);
     const itemResult = useItem(parentId?.toString());
 
     React.useEffect(() => {
@@ -58,6 +82,7 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
             artistData?.Overview
 
             loadSimilarItems();
+            loadArtistAlbums();
             
         }
     }, [itemResult.data]);
@@ -75,6 +100,18 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
             console.log('Similar items fetched:', items);
         } catch (error) {
             console.error('Error fetching similar items:', error);
+        }
+    }
+
+    const loadArtistAlbums = async () => {
+        if (!itemResult.data) return;
+
+        try {
+            const result = await getArtistAlbums(itemResult.data!);
+            setAlbums(result?.Items || []);
+            console.log('Artist albums fetched:', result);
+        } catch (error) {
+            console.error('Error fetching artist albums:', error);
         }
     }
 
@@ -120,6 +157,24 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
 
             <Divider sx={{ borderColor: 'rgba(255,255,255,0.25)' }} />
 
+            <SectionContainer
+                    sectionHeaderProps={{
+                        title: globalize.translate("Albums")
+                    }}
+                    itemsContainerProps={{
+                        queryKey: ['AlbumsSectionWithItems']
+                    }}
+                    items={[...albums] as ItemDto[]}
+                    cardOptions={{
+                        queryKey: ['AlbumsSectionWithItems'],
+                        showTitle: true,
+                        centerText: true,
+                        cardLayout: false,
+                        overlayText: false,
+                        serverId: __legacyApiClient__?.serverId()
+                    }}
+                />
+
             <ItemsView
                     viewType={LibraryTab.Songs}
                     parentId={parentId}
@@ -130,7 +185,6 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
                         'No songs available'
                     }
                 />
-
 
             <SectionContainer
                     sectionHeaderProps={{

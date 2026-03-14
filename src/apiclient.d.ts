@@ -139,7 +139,7 @@ declare module 'jellyfin-apiclient' {
         /** @deprecated This function returns a URL with a legacy auth parameter.*/
         getItemDownloadUrl(itemId: string): string;
         getItemImageInfos(itemId: string): Promise<ImageInfo[]>;
-        getItems(userId: string, options?: any): Promise<BaseItemDtoQueryResult>;
+        getItems(userId: string, options?: (GetItemsOptions | any)): Promise<BaseItemDtoQueryResult>;
         getItem(userId: string, itemId: string): Promise<BaseItemDto>;
         getJSON(url: string, includeAuthorization?: boolean): Promise<any>;
         getLatestItems(options?: any): Promise<BaseItemDto[]>;
@@ -351,6 +351,22 @@ declare module 'jellyfin-apiclient' {
 
     interface Event {
         type: string;
+    }
+
+    interface GetItemsOptions {
+        IncludeItemTypes?: string,
+        Recursive?: boolean,
+        ExcludeItemIds?: string[],
+        SortBy?: string,
+        SortOrder?: string,
+        ContributingArtistIds?: string[],
+        AlbumArtistIds?: string[],
+        Fields?: string,
+        ParentId?: string,
+        StartIndex?: number,
+        Limit?: number,
+        ImageTypeLimit?: number,
+        EnableImageTypes?: string
     }
 
     const Events: {
