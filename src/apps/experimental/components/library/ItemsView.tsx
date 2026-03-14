@@ -45,6 +45,7 @@ interface ItemsViewProps {
     itemType: BaseItemKind[];
     collectionType?: CollectionType;
     isPaginationEnabled?: boolean;
+    isLibraryViewMenuEnabled?: boolean;
     isBtnPlayAllEnabled?: boolean;
     isBtnQueueEnabled?: boolean;
     isBtnShuffleEnabled?: boolean;
@@ -63,6 +64,7 @@ const ItemsView: FC<ItemsViewProps> = ({
     parentId,
     collectionType,
     isPaginationEnabled = true,
+    isLibraryViewMenuEnabled = true,
     isBtnPlayAllEnabled = false,
     isBtnQueueEnabled = false,
     isBtnShuffleEnabled = false,
@@ -251,11 +253,12 @@ const ItemsView: FC<ItemsViewProps> = ({
                     alignItems: 'center'
                 }}
             >
-                <Box
+                { isLibraryViewMenuEnabled && (<Box
                     sx={{ marginRight: 1 }}
-                >
-                    <LibraryViewMenu />
-                </Box>
+                    >
+                        <LibraryViewMenu />
+                    </Box>
+                )}
 
                 <Box
                     sx={{

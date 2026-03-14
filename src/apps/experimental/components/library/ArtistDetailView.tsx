@@ -88,6 +88,7 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
                     viewType={LibraryTab.Songs}
                     parentId={parentId}
                     collectionType={CollectionType.Music}
+                    isLibraryViewMenuEnabled={false}
                     itemType={[]}
                     noItemsMessage={
                         'No songs available'
