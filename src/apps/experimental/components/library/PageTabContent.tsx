@@ -137,7 +137,7 @@ const PageTabContent: FC<PageTabContentProps> = ({ parentId, currentTab }) => {
                     onSelectItem={setSelectedItem}
                 />
             </Box>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1, height: '100%', overflow: 'auto' }}>
                 <ArtistDetailView
                     parentId={selectedItemId}
                 />

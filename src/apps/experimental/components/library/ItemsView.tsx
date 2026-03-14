@@ -241,7 +241,7 @@ const ItemsView: FC<ItemsViewProps> = ({
     );
 
     return (
-        <Box className='padded-bottom-page' sx={{height: '100%'}}>
+        <Box className='padded-bottom-page' sx={{height: '100%', display: 'flex', flexDirection: 'column'}}>
             <Box
                 className={classNames(
                     'padded-top padded-left padded-right',
