@@ -235,6 +235,7 @@ const ItemsView: FC<ItemsViewProps> = ({
 
     const itemsContainerClass = classNames(
         'padded-left padded-right padded-right-withalphapicker',
+        'w-90',
         libraryViewSettings.ViewMode === ViewMode.ListView ?
             'vertical-list' :
             'vertical-wrap'
