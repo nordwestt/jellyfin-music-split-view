@@ -14,7 +14,9 @@ import AccordionDetails from '@mui/material/AccordionDetails/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary/AccordionSummary';
 import { T } from 'vitest/dist/chunks/reporters.d.BFLkQcL6';
 import ServerConnections from 'lib/jellyfin-apiclient/ServerConnections';
-import ItemCard from './ItemCard';
+import SectionContainer from 'components/common/SectionContainer';
+import globalize from 'lib/globalize';
+import { useApi } from 'hooks/useApi';
 
 interface ArtistDetailViewProps {
     parentId: ParentId;
@@ -38,6 +40,7 @@ export function getSimilarItems(item: ItemDto) {
 const ArtistDetailView: FC<ArtistDetailViewProps> = ({
     parentId,
 }) => {
+    const { __legacyApiClient__ } = useApi();
 
     const [artistData, setArtistData] = React.useState<ItemDto | undefined>(undefined);
     const [backdropUrl, setBackdropUrl] = React.useState<string | null>(null);
@@ -128,17 +131,25 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
                     }
                 />
 
-            <Box>
-                <Typography variant="h2" component="h2" gutterBottom>
-                    Similar Artists
-                </Typography>
-                    {similarItems.map(item => (
-                        <ItemCard key={item.Id} item={item} />
-                    ))}
-            </Box>
-                
 
-            
+            <SectionContainer
+                    sectionHeaderProps={{
+                        title: globalize.translate("HeaderMoreLikeThis")
+                    }}
+                    itemsContainerProps={{
+                        queryKey: ['SuggestionSectionWithItems']
+                    }}
+                    items={[...similarItems] as ItemDto[]}
+                    cardOptions={{
+                        queryKey: ['SuggestionSectionWithItems'],
+                        showTitle: true,
+                        centerText: true,
+                        cardLayout: false,
+                        overlayText: false,
+                        serverId: __legacyApiClient__?.serverId()
+                    }}
+                />
+                
         </Box>
     );
 };
