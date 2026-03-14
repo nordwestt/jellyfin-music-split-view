@@ -411,7 +411,7 @@ const ItemsContainer: FC<PropsWithChildren<ItemsContainerProps>> = ({
     );
 
     return (
-        <Box ref={itemsContainerRef} className={itemsContainerClass}>
+        <Box ref={itemsContainerRef} className={itemsContainerClass} sx={{ height: '100%', overflow: 'auto'}}>
             {children}
         </Box>
     );

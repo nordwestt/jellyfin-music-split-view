@@ -102,25 +102,32 @@ const PageTabContent: FC<PageTabContentProps> = ({ parentId, currentTab }) => {
     }
 
     return (
-        <ItemsView
-            viewType={currentTab.viewType}
-            parentId={parentId}
-            collectionType={currentTab.collectionType}
-            isPaginationEnabled={currentTab.isPaginationEnabled}
-            isBtnPlayAllEnabled={currentTab.isBtnPlayAllEnabled}
-            isBtnQueueEnabled={currentTab.isBtnQueueEnabled}
-            isBtnShuffleEnabled={currentTab.isBtnShuffleEnabled}
-            isBtnNewCollectionEnabled={currentTab.isBtnNewCollectionEnabled}
-            isBtnNewPlaylistEnabled={currentTab.isBtnNewPlaylistEnabled}
-            isBtnFilterEnabled={currentTab.isBtnFilterEnabled}
-            isBtnGridListEnabled={currentTab.isBtnGridListEnabled}
-            isBtnSortEnabled={currentTab.isBtnSortEnabled}
-            isAlphabetPickerEnabled={currentTab.isAlphabetPickerEnabled}
-            itemType={currentTab.itemType || []}
-            noItemsMessage={
-                currentTab.noItemsMessage || 'MessageNoItemsAvailable'
-            }
-        />
+        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, height: '100%' }}>
+            <Box sx={{ maxWidth: '400px' }}>
+                <ItemsView
+                    viewType={currentTab.viewType}
+                    parentId={parentId}
+                    collectionType={currentTab.collectionType}
+                    isPaginationEnabled={currentTab.isPaginationEnabled}
+                    isBtnPlayAllEnabled={currentTab.isBtnPlayAllEnabled}
+                    isBtnQueueEnabled={currentTab.isBtnQueueEnabled}
+                    isBtnShuffleEnabled={currentTab.isBtnShuffleEnabled}
+                    isBtnNewCollectionEnabled={currentTab.isBtnNewCollectionEnabled}
+                    isBtnNewPlaylistEnabled={currentTab.isBtnNewPlaylistEnabled}
+                    isBtnFilterEnabled={currentTab.isBtnFilterEnabled}
+                    isBtnGridListEnabled={currentTab.isBtnGridListEnabled}
+                    isBtnSortEnabled={currentTab.isBtnSortEnabled}
+                    isAlphabetPickerEnabled={currentTab.isAlphabetPickerEnabled}
+                    itemType={currentTab.itemType || []}
+                    noItemsMessage={
+                        currentTab.noItemsMessage || 'MessageNoItemsAvailable'
+                    }
+                />
+            </Box>
+            <Box>
+                This is the details pane. It will show details about the selected item in the list, and can also be used to show filters, sort options, and other actions related to the list.
+            </Box>
+        </Box>
     );
 };
 
