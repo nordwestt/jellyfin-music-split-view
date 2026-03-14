@@ -6,8 +6,9 @@ import { useItem } from 'hooks/useItem';
 import { ParentId } from 'types/library';
 import ItemsView from './ItemsView';
 import { LibraryTab } from 'types/libraryTab';
-import { CollectionType } from '@jellyfin/sdk/lib/generated-client';
+import { CollectionType, ImageType } from '@jellyfin/sdk/lib/generated-client';
 import { set } from 'date-fns';
+import { getImageUrl } from 'apps/stable/features/playback/utils/image';
 
 
 interface ArtistDetailViewProps {
@@ -19,13 +20,22 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
 }) => {
 
     const [artistData, setArtistData] = React.useState<ItemDto | undefined>(undefined);
+    const [backdropUrl, setBackdropUrl] = React.useState<string | null>(null);
+
     const itemResult = useItem(parentId?.toString());
     React.useEffect(() => {
         if (itemResult.data) {
             console.log('Artist data fetched:', itemResult.data);
             setArtistData(itemResult.data);
+            let bgUrl = getBackgroundImageUrl();
+            setBackdropUrl(bgUrl);
+            console.log('Background image URL:', bgUrl);
         }
     }, [itemResult.data]);
+
+    const getBackgroundImageUrl = () => {
+        return getImageUrl(itemResult.data!, { type: ImageType.Primary });
+    }
 
     return (
         <Box
@@ -33,15 +43,15 @@ const ArtistDetailView: FC<ArtistDetailViewProps> = ({
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 2,
-                // background: backdropUrl ? `linear-gradient(180deg,rgba(0,0,0,0.8),rgba(0,0,0,0.95)), url(${backdropUrl}) center/cover` : 'rgba(0,0,0,0.9)',
                 padding: 2,
-                borderRadius: 2,
                 color: 'common.white'
             }}
         >
-            <Box>
-                <Typography variant="h4" component="h2" gutterBottom>
+            <Box sx={{
+                padding: '200px 0px  0px 20px',
+                background: backdropUrl ? `linear-gradient(180deg,rgba(0,0,0,0.8),rgba(0,0,0,0.95)), url(${backdropUrl}) center/cover` : 'rgba(0,0,0,0.9)',
+            }}>
+                <Typography variant="h1" component="h1" gutterBottom>
                     {artistData?.Name || parentId}
                 </Typography>
             </Box>
