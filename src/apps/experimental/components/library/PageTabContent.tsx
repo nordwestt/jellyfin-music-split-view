@@ -10,6 +10,7 @@ import { LibraryTab } from 'types/libraryTab';
 import type { ParentId } from 'types/library';
 import type { LibraryTabContent } from 'types/libraryTabContent';
 import LibraryViewMenu from './LibraryViewMenu';
+import ArtistDetailView from './ArtistDetailView';
 
 interface PageTabContentProps {
     parentId: ParentId;
@@ -18,11 +19,13 @@ interface PageTabContentProps {
 
 const PageTabContent: FC<PageTabContentProps> = ({ parentId, currentTab }) => {
 
-    const [selectedItemId, setSelectedItemId] = React.useState<string | null>(null);
+    const [selectedItemId, setSelectedItemId] = React.useState<ParentId | null>(null);
 
 
-    const setSelectedItem = (itemId: string) => {
+    const setSelectedItem = (itemId: ParentId) => {
         console.log('Selected item ID:', itemId);
+        
+        console.log(currentTab.itemType);
         setSelectedItemId(itemId);
     }
 
@@ -134,8 +137,10 @@ const PageTabContent: FC<PageTabContentProps> = ({ parentId, currentTab }) => {
                     onSelectItem={setSelectedItem}
                 />
             </Box>
-            <Box>
-                This is the details pane. It will show details about the selected item in the list, and can also be used to show filters, sort options, and other actions related to the list.
+            <Box sx={{ flexGrow: 1 }}>
+                <ArtistDetailView
+                    parentId={selectedItemId}
+                />
             </Box>
         </Box>
     );
