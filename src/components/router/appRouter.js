@@ -74,6 +74,8 @@ class AppRouter {
     async show(path, options) {
         if (this.promiseShow) await this.promiseShow;
 
+        console.log('[appRouter] show', path, options);
+
         // ensure the path does not start with '#' since the router adds this
         if (path.startsWith('#')) {
             path = path.substring(1);
@@ -443,7 +445,9 @@ class AppRouter {
         const itemTypes = ['Playlist', 'TvChannel', 'Program', 'BoxSet', 'MusicAlbum', 'MusicGenre', 'Person', 'Recording', 'MusicArtist'];
 
         if (itemTypes.indexOf(itemType) >= 0) {
-            return '#/details?id=' + id + '&serverId=' + serverId;
+            // return '#/details?id=' + id + '&serverId=' + serverId;
+            // return '#/details?id=' + id + '&serverId=' + serverId;
+            return '#/music?itemId=' + id + '&collectionType=music&tab=3';
         }
 
         const contextSuffix = context ? '&context=' + context : '';

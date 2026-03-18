@@ -116,9 +116,10 @@ const ItemsView: FC<ItemsViewProps> = ({
             listOptions.addToListButton = true;
         } else if (viewType === LibraryTab.Episodes) {
             listOptions.showParentTitle = true;
-        } else if (viewType === LibraryTab.Artists) {
-            listOptions.action = ItemAction.Select;
-        }
+        } 
+        // else if (viewType === LibraryTab.Artists) {
+        //     listOptions.action = ItemAction.Select;
+        // }
 
         return listOptions;
     }, [itemsResult?.Items, collectionType, viewType, libraryViewSettings.SortBy]);

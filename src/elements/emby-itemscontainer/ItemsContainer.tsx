@@ -72,17 +72,7 @@ const ItemsContainer: FC<PropsWithChildren<ItemsContainerProps>> = ({
     const onClick = useCallback((e: MouseEvent) => {
         const itemsContainer = itemsContainerRef.current as HTMLDivElement;
         const multiSelect = multiSelectref.current;
-        const target = e.target as HTMLElement;
-        const card = dom.parentWithAttribute(target, 'data-id');
-        const actionElement = dom.parentWithAttribute(target, 'data-action');
-        const action = actionElement?.getAttribute('data-action');
 
-        if (action === ItemAction.Select && card?.getAttribute('data-id')) {
-            onSelectItem?.(card.getAttribute('data-id') ?? '');
-            e.preventDefault();
-            e.stopPropagation();
-            return;
-        }
 
         if (
             multiSelect

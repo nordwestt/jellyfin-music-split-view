@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box/Box';
-import React, { type FC } from 'react';
+import React, { useEffect, type FC } from 'react';
 import SuggestionsSectionView from './SuggestionsSectionView';
 import UpcomingView from './UpcomingView';
 import GenresView from './GenresView';
@@ -11,6 +11,7 @@ import type { ParentId } from 'types/library';
 import type { LibraryTabContent } from 'types/libraryTabContent';
 import LibraryViewMenu from './LibraryViewMenu';
 import ArtistDetailView from './ArtistDetailView';
+import { useSearchParams } from 'react-router-dom';
 
 interface PageTabContentProps {
     parentId: ParentId;
@@ -18,8 +19,21 @@ interface PageTabContentProps {
 }
 
 const PageTabContent: FC<PageTabContentProps> = ({ parentId, currentTab }) => {
+    
+    const [params] = useSearchParams();
+    const itemId = params.get('itemId') ?? 'missing';
+    const serverId = params.get('serverId') ?? 'missing';
+    const [selectedItemId, setSelectedItemId] = React.useState<ParentId | null>(itemId ?? null);
+    
 
-    const [selectedItemId, setSelectedItemId] = React.useState<ParentId | null>(null);
+    console.log('Item ID from search params:', itemId);
+    console.log('Server ID from search params:', serverId);
+
+    useEffect(() => {
+        console.log('useEffect triggered with itemId:', itemId);
+        setSelectedItemId(itemId);
+    }, [itemId]);
+    
 
 
     const setSelectedItem = (itemId: ParentId) => {
